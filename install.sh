@@ -30,11 +30,15 @@ fi
 mkdir -p ~/.config/i3
 mkdir -p ~/.config/kitty
 
-# Copiar configuraciones de i3
-cp -r i3/config ~/.config/i3/config
+# Copiar configuraciones de i3 solo si no existen
+if [ ! -f ~/.config/i3/config ]; then
+    cp -r i3/config ~/.config/i3/config
+fi
 
-# Copiar configuraciones de Kitty
-cp -r kitty/kitty.conf ~/.config/kitty/kitty.conf
+# Copiar configuraciones de Kitty solo si no existen
+if [ ! -f ~/.config/kitty/kitty.conf ]; then
+    cp -r kitty/kitty.conf ~/.config/kitty/kitty.conf
+fi
 
 # Instalar Nerd Font
 mkdir -p ~/.local/share/fonts
