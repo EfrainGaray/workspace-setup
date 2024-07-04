@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Paquetes requeridos
-REQUIRED_PACKAGES=("i3" "kitty" "feh" "git" "vim" "unzip" "curl" "picom")
+REQUIRED_PACKAGES=("i3" "kitty" "feh" "git" "vim" "unzip" "curl" "picom" "fzf" "lsd")
 
 # Comprobar si los paquetes requeridos están instalados y, si no, instalarlos
 missing_packages=()
@@ -66,22 +66,26 @@ else
 fi
 
 # Listar temas disponibles
-echo "Temas disponibles:"
-ls kitty-themes/themes/
+echo "Selecciona un tema de la lista usando las teclas de navegación y presiona Enter para aplicar:"
+theme_name=$(ls kitty-themes/themes/ | fzf)
 
-# Solicitar al usuario que elija un tema
-read -p "Ingrese el nombre del tema que desea aplicar: " theme_name
-
-# Verificar si el tema existe
-if [ -f "kitty-themes/themes/$theme_name.conf" ]; then
-    # Aplicar el tema seleccionado
-    echo "include ~/kitty-themes/themes/$theme_name.conf" >> ~/.config/kitty/kitty.conf
+# Verificar si el tema existe y aplicarlo
+if [ -f "kitty-themes/themes/$theme_name" ]; then
+    echo "include ~/kitty-themes/themes/$theme_name" >> ~/.config/kitty/kitty.conf
     echo "Tema $theme_name aplicado a Kitty."
 else
     echo "El tema $theme_name no existe. No se aplicaron cambios en el tema."
 fi
 
-echo "Configuraciones de i3, Kitty y Picom instaladas correctamente, y Nerd Font configurada."
+# Configurar alias para lsd
+if ! grep -q "alias ls=" ~/.bashrc; then
+    echo 'alias ls="lsd"' >> ~/.bashrc
+    echo 'alias ll="lsd -l"' >> ~/.bashrc
+    echo 'alias la="lsd -a"' >> ~/.bashrc
+    echo 'alias lla="lsd -la"' >> ~/.bashrc
+fi
+
+echo "Configuraciones de i3, Kitty y Picom instaladas correctamente, y Nerd Font configurada. Alias para lsd configurados."
 
 cd -
 
