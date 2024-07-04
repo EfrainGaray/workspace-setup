@@ -1,9 +1,0 @@
-repos:
-  - repo: local
-    hooks:
-      - id: commitlint
-        name: commitlint
-        entry: ./commit-msg.sh
-        language: script
-        stages: [commit-msg]
-
