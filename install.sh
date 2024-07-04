@@ -30,15 +30,11 @@ fi
 mkdir -p ~/.config/i3
 mkdir -p ~/.config/kitty
 
-# Copiar configuraciones de i3 solo si no existen
-if [ ! -f ~/.config/i3/config ]; then
-    cp -r i3/config ~/.config/i3/config
-fi
+# Sobrescribir configuraciones de i3
+cp -r i3/config ~/.config/i3/config
 
-# Copiar configuraciones de Kitty solo si no existen
-if [ ! -f ~/.config/kitty/kitty.conf ]; then
-    cp -r kitty/kitty.conf ~/.config/kitty/kitty.conf
-fi
+# Sobrescribir configuraciones de Kitty
+cp -r kitty/kitty.conf ~/.config/kitty/kitty.conf
 
 # Instalar Nerd Font
 mkdir -p ~/.local/share/fonts
@@ -49,6 +45,32 @@ rm FiraCode.zip
 
 # Actualizar caché de fuentes
 fc-cache -fv
+
+# Clonar el repositorio de temas de Kitty
+cd ~
+if [ ! -d "kitty-themes" ]; then
+    git clone https://github.com/dexpota/kitty-themes.git
+else
+    cd kitty-themes
+    git pull
+    cd ..
+fi
+
+# Listar temas disponibles
+echo "Temas disponibles:"
+ls kitty-themes/themes/
+
+# Solicitar al usuario que elija un tema
+read -p "Ingrese el nombre del tema que desea aplicar: " theme_name
+
+# Verificar si el tema existe
+if [ -f "kitty-themes/themes/$theme_name.conf" ]; then
+    # Aplicar el tema seleccionado
+    echo "include ~/kitty-themes/themes/$theme_name.conf" >> ~/.config/kitty/kitty.conf
+    echo "Tema $theme_name aplicado a Kitty."
+else
+    echo "El tema $theme_name no existe. No se aplicaron cambios en el tema."
+fi
 
 echo "Configuraciones de i3 y Kitty instaladas correctamente, y Nerd Font configurada."
 
