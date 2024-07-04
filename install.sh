@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Paquetes requeridos
-REQUIRED_PACKAGES=("i3" "kitty" "feh" "git" "vim")
+REQUIRED_PACKAGES=("i3" "kitty" "feh" "git" "vim" "unzip" "curl")
 
 # Comprobar si los paquetes requeridos están instalados y, si no, instalarlos
 missing_packages=()
@@ -26,11 +26,27 @@ if [[ ! $REPLY =~ ^[Ss]$ ]]; then
     exit 1
 fi
 
+# Crear directorios de configuración si no existen
+mkdir -p ~/.config/i3
+mkdir -p ~/.config/kitty
+
 # Copiar configuraciones de i3
-cp -r i3 ~/.config/i3
+cp -r i3/config ~/.config/i3/config
 
 # Copiar configuraciones de Kitty
-cp -r kitty ~/.config/kitty
+cp -r kitty/kitty.conf ~/.config/kitty/kitty.conf
 
-echo "Configuraciones de i3 y Kitty instaladas correctamente."
+# Instalar Nerd Font
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+curl -fLo "FiraCode.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+unzip FiraCode.zip -d FiraCode
+rm FiraCode.zip
+
+# Actualizar caché de fuentes
+fc-cache -fv
+
+echo "Configuraciones de i3 y Kitty instaladas correctamente, y Nerd Font configurada."
+
+cd -
 
